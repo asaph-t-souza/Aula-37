@@ -10,5 +10,10 @@ public class MainController {
     public String home(){
         return "<h1> Pagina Inicial </h1>";
     }
+
+    @GetMapping("/private")
+    public String privatePage(){
+        return "<h1> Pagina Secreta </h1>";
+    }
     
 }
