@@ -2,6 +2,8 @@ package com.t3.springsecurity;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,18 +16,30 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+            .authorizeHttpRequests(
+                authorizeConfig -> {
+                    authorizeConfig.requestMatchers("/").permitAll();
+                    authorizeConfig.anyRequest().authenticated();
+                }
+            )
+            .oauth2Login(Customizer.withDefaults());
+            // .formLogin(Customizer.withDefaults());
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        UserDetails user = 
-            User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("senha")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
+        return httpSecurity.build();
     }
+
+    // @Bean
+    // public UserDetailsService userDetailsService(){
+    //     UserDetails user = 
+    //         User.withDefaultPasswordEncoder()
+    //             .username("admin")
+    //             .password("senha")
+    //             .roles("USER")
+    //             .build();
+
+    //     return new InMemoryUserDetailsManager(user);
+    // }
     
 }
